@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-5 print:hidden">
+  <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-50">Ürün Etiket Yazdırma</h1>
+  <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Ürün seçin, fiyatı kontrol edin, etiketi yazdırın</p>
+</div>
+
+<!-- Adım göstergesi -->
+<nav aria-label="Adımlar" class="mb-5 print:hidden">
+  <ol class="grid grid-cols-3 gap-2">
+    <li>
+      <button type="button" onclick="adimGit(1)" id="adimBtn1" aria-current="step"
+        class="adim-btn w-full min-h-11 flex items-center justify-center gap-2 px-2 rounded-lg text-sm font-medium transition-colors duration-200 cursor-pointer">
+        <span class="adim-no w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0">1</span>
+        <span class="truncate">Ürün<span class="hidden sm:inline"> Seçimi</span></span>
+      </button>
+    </li>
+    <li>
+      <button type="button" onclick="adimGit(2)" id="adimBtn2"
+        class="adim-btn w-full min-h-11 flex items-center justify-center gap-2 px-2 rounded-lg text-sm font-medium transition-colors duration-200 cursor-pointer">
+        <span class="adim-no w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0">2</span>
+        <span class="truncate">Fiyat<span class="hidden sm:inline"> Girişi</span></span>
+      </button>
+    </li>
+    <li>
+      <button type="button" onclick="adimGit(3)" id="adimBtn3"
+        class="adim-btn w-full min-h-11 flex items-center justify-center gap-2 px-2 rounded-lg text-sm font-medium transition-colors duration-200 cursor-pointer">
+        <span class="adim-no w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0">3</span>
+        <span class="truncate">Önizleme<span class="hidden sm:inline"> & Ayarlar</span></span>
+      </button>
+    </li>
+  </ol>
+</nav>
+
+<!-- ADIM 1: Ürün Seçimi -->
+<section id="adim1" aria-labelledby="adim1Baslik">
+  <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+    <div class="flex items-center justify-between gap-3 mb-4">
+      <h2 id="adim1Baslik" class="text-lg font-semibold text-gray-900 dark:text-gray-50">Ürün Listesi</h2>
+      <span id="secimSayisi" class="text-sm font-medium text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1 rounded-full whitespace-nowrap">0 seçili</span>
+    </div>
+
+    <label for="aramaInput" class="sr-only">Ürün ara</label>
+    <div class="relative mb-3">
+      <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400" aria-hidden="true"></i>
+      <input type="search" id="aramaInput" placeholder="Ürün, birim veya üretim yeri ara"
+        class="w-full min-h-11 pl-10 pr-4 py-2.5 text-base rounded-lg border border-gray-300 dark:border-gray-600
+               bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400
+               focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+    </div>
+
+    <label class="flex items-center gap-3 px-3 min-h-11 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer border-b border-gray-200 dark:border-gray-700">
+      <input type="checkbox" id="tumunuSecKutu" class="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500">
+      <span class="text-sm font-medium text-gray-800 dark:text-gray-200">Tümünü Seç</span>
+    </label>
+
+    <div id="urunListesi" class="divide-y divide-gray-100 dark:divide-gray-700/60 max-h-[28rem] overflow-y-auto"></div>
+
+    <div class="mt-4 flex justify-end">
+      <button type="button" onclick="adimGit(2)" id="adim1Devam" disabled
+        class="w-full sm:w-auto min-h-11 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg
+               transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-base
+               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
+        Fiyat Girişine Geç <i class="ph ph-arrow-right ml-1" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ADIM 2: Fiyat Girişi -->
+<section id="adim2" class="hidden" aria-labelledby="adim2Baslik">
+  <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+    <div class="mb-4">
+      <h2 id="adim2Baslik" class="text-lg font-semibold text-gray-900 dark:text-gray-50">Fiyat Girişi</h2>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Fiyat ve birim sistemden dolu gelir, isterseniz değiştirebilirsiniz. Birim için listeden seçin ya da yazın (ör. TL/250g).</p>
+    </div>
+
+    <div id="fiyatListesi" class="space-y-3"></div>
+    <datalist id="birimSecenekleri"></datalist>
+
+    <div class="mt-4 flex flex-col-reverse sm:flex-row sm:justify-between gap-2">
+      <button type="button" onclick="adimGit(1)"
+        class="min-h-11 px-4 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600
+               text-gray-800 dark:text-gray-100 font-medium rounded-lg transition-colors duration-200 cursor-pointer text-base">
+        <i class="ph ph-arrow-left mr-1" aria-hidden="true"></i>Geri
+      </button>
+      <button type="button" onclick="adimGit(3)" id="adim2Devam" disabled
+        class="min-h-11 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg
+               transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-base">
+        Önizlemeye Geç <i class="ph ph-arrow-right ml-1" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ADIM 3: Önizleme & Ayarlar -->
+<section id="adim3" class="hidden" aria-labelledby="adim3Baslik">
+  <div class="grid gap-4 lg:grid-cols-[22rem_minmax(0,1fr)] items-start print:hidden">
+
+    <!-- Ayarlar paneli (hep açık) -->
+    <aside class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 lg:sticky lg:top-4" aria-labelledby="ayarBaslik">
+      <div class="flex items-center justify-between gap-2 mb-4">
+        <h2 id="ayarBaslik" class="text-lg font-semibold text-gray-900 dark:text-gray-50 flex items-center gap-2">
+          <i class="ph ph-sliders-horizontal text-blue-600 dark:text-blue-400" aria-hidden="true"></i>Etiket Ayarları
+        </h2>
+        <button type="button" onclick="ayarlariSifirla()"
+          class="min-h-11 px-3 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200 cursor-pointer">
+          <i class="ph ph-arrow-counter-clockwise mr-1" aria-hidden="true"></i>Sıfırla
+        </button>
+      </div>
+
+      <fieldset class="mb-4">
+        <legend class="text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-400 mb-2">Etiket Boyutu (mm)</legend>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="ayar_etiket_genislik" class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Genişlik</label>
+            <input type="number" inputmode="numeric" id="ayar_etiket_genislik" min="20" max="200"
+              class="ayar-input w-full min-h-11 px-3 text-base rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+          <div>
+            <label for="ayar_etiket_yukseklik" class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Yükseklik</label>
+            <input type="number" inputmode="numeric" id="ayar_etiket_yukseklik" min="20" max="200"
+              class="ayar-input w-full min-h-11 px-3 text-base rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+          <div>
+            <label for="ayar_ic_bosluk" class="block text-sm text-gray-700 dark:text-gray-300 mb-1">İç boşluk</label>
+            <input type="number" inputmode="numeric" id="ayar_ic_bosluk" min="0" max="20"
+              class="ayar-input w-full min-h-11 px-3 text-base rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+          <div>
+            <label for="ayar_dis_bosluk" class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Dış boşluk</label>
+            <input type="number" inputmode="numeric" id="ayar_dis_bosluk" min="0" max="20"
+              class="ayar-input w-full min-h-11 px-3 text-base rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Yazı tipi / boyut / kalınlık: JS doldurur -->
+      <div id="yaziAyarlariKapsayici" class="space-y-4"></div>
+
+      <button type="button" onclick="ayarlariKaydet()" id="kaydetBtn"
+        class="mt-4 w-full min-h-11 px-4 bg-gray-900 dark:bg-gray-100 hover:bg-gray-800 dark:hover:bg-white text-white dark:text-gray-900 font-medium rounded-lg transition-colors duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
+        <i class="ph ph-floppy-disk mr-1" aria-hidden="true"></i>Ayarları Kaydet
+      </button>
+    </aside>
+
+    <!-- Önizleme -->
+    <div class="min-w-0">
+      <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 id="adim3Baslik" class="text-lg font-semibold text-gray-900 dark:text-gray-50">
+            Önizleme <span class="text-gray-500 dark:text-gray-400 font-normal">(<span id="etiketSayisi">0</span> etiket)</span>
+          </h2>
+          <div class="flex items-center gap-1" role="group" aria-label="Yakınlaştırma">
+            <button type="button" onclick="yakinlastir(-0.5)" aria-label="Uzaklaştır"
+              class="min-h-11 min-w-11 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors duration-200 cursor-pointer">
+              <i class="ph ph-minus text-lg" aria-hidden="true"></i>
+            </button>
+            <span id="yakinlastirmaDeger" class="text-sm text-gray-600 dark:text-gray-300 w-14 text-center tabular-nums">200%</span>
+            <button type="button" onclick="yakinlastir(0.5)" aria-label="Yakınlaştır"
+              class="min-h-11 min-w-11 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors duration-200 cursor-pointer">
+              <i class="ph ph-plus text-lg" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-[auto_1fr_1fr] gap-2 mt-3">
+          <button type="button" onclick="adimGit(2)"
+            class="min-h-11 px-4 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-100 font-medium rounded-lg transition-colors duration-200 cursor-pointer">
+            <i class="ph ph-arrow-left mr-1" aria-hidden="true"></i>Geri
+          </button>
+          <button type="button" onclick="yazdir()" id="yazdirBtn"
+            class="min-h-11 px-4 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
+            <i class="ph ph-printer mr-1" aria-hidden="true"></i>Tarayıcıdan Yazdır
+          </button>
+          <button type="button" onclick="basimGonder()" id="basimBtn"
+            class="min-h-11 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
+            <i class="ph ph-paper-plane-tilt mr-1" aria-hidden="true"></i>Yazıcıya Gönder
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-gray-100 dark:bg-gray-950 rounded-xl p-4 sm:p-6 overflow-auto max-h-[70vh]">
+        <div id="etiketOnizleme" class="flex flex-wrap gap-4 justify-center"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="yazdirAlani" class="hidden"></div>
+</section>
+
+<!-- Bildirim -->
+<div id="bildirim" role="status" aria-live="polite"
+  class="hidden fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-96 z-40 print:hidden">
+  <div id="bildirimIcerik" class="rounded-lg shadow-lg px-4 py-3 flex items-start gap-3">
+    <i id="bildirimIkon" class="text-xl shrink-0 mt-0.5" aria-hidden="true"></i>
+    <div class="flex-1 min-w-0">
+      <p id="bildirimBaslik" class="font-medium text-sm"></p>
+      <p id="bildirimMetin" class="text-sm mt-0.5"></p>
+    </div>
+    <button type="button" onclick="bildirimKapat()" aria-label="Kapat" class="shrink-0 min-h-11 min-w-11 -m-3 flex items-center justify-center hover:opacity-70 cursor-pointer">
+      <i class="ph ph-x text-lg" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>
+
+<script>
+  var VARSAYILAN_AYARLAR = {{ varsayilan_ayarlar | tojson }};
+  var YAZI_TIPLERI = {{ yazi_tipleri | tojson }};
+</script>
+<script src="{{ url_for('static', filename='etiket_ekrani.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!-- Yalnizca yerel gelistirme icin. Ana sistemde kendi base.html'i kullanilir; bu dosya tasinmaz. -->
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Etiket Ekranı (geliştirme)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>if (window.tailwind) tailwind.config = { darkMode: 'class' };</script>
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
+  <header class="print:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <span class="font-bold">Yönetim Paneli (geliştirme)</span>
+      <button type="button" onclick="document.documentElement.classList.toggle('dark')"
+        class="min-h-11 px-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">Tema</button>
+    </div>
+  </header>
+  <main class="max-w-7xl mx-auto px-4 py-6">
+    {% block content %}{% endblock %}
+  </main>
+  <script>
+    // Ana sistemde hazir; gelistirmede bos.
+    function showLoading(mesaj) {}
+    function hideLoading() {}
+  </script>
+</body>
+</html>
